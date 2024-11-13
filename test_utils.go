@@ -7,7 +7,8 @@ import (
 
 type test struct {
 	requiresRoot      bool
-	requiresBoardType BoardType
+	requiredBoardType *BoardType
+	requiresSbc       bool
 }
 
 func Test() *test {
@@ -20,13 +21,28 @@ func (t *test) RequiresRoot() *test {
 }
 
 func (t *test) RequiresBoardType(boardType BoardType) *test {
-	t.requiresBoardType = boardType
+	t.requiredBoardType = &boardType
+	return t
+}
+
+func (t *test) RequiresSbc() *test {
+	t.requiresSbc = true
 	return t
 }
 
 func (t *test) ShouldSkip(test *testing.T) {
-	if !IsBoardType(t.requiresBoardType) {
-		test.Skipf("Test requires board type %v", t.requiresBoardType)
+	if t.requiresSbc {
+		boardType, err := GetBoardType()
+		if err != nil {
+			test.Error(err)
+		}
+		if boardType == BoardTypeUnknown {
+			test.Skipf("Test requires physical SBC")
+		}
+	}
+
+	if t.requiredBoardType != nil && !IsBoardType(*t.requiredBoardType) {
+		test.Skipf("Test requires board type %v", t.requiredBoardType)
 	}
 	if t.requiresRoot && !IsRoot() {
 		test.Skip("Test requires root")
