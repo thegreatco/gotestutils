@@ -3,6 +3,8 @@ package gotestutils
 import (
 	"os"
 	"testing"
+
+	. "github.com/thegreatco/sbcidentify"
 )
 
 type test struct {
