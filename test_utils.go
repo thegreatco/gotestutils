@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/thegreatco/sbcidentify"
-	"github.com/thegreatco/sbcidentify/boardtype"
+	"github.com/rinzlerlabs/sbcidentify"
+	"github.com/rinzlerlabs/sbcidentify/boardtype"
 )
 
 type test struct {

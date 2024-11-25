@@ -3,7 +3,7 @@ package gotestutils
 import (
 	"testing"
 
-	"github.com/thegreatco/sbcidentify/raspberrypi"
+	"github.com/rinzlerlabs/sbcidentify/raspberrypi"
 )
 
 func TestShouldSkip(t *testing.T) {
