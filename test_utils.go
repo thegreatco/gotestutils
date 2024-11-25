@@ -4,12 +4,13 @@ import (
 	"os"
 	"testing"
 
-	. "github.com/thegreatco/sbcidentify"
+	"github.com/thegreatco/sbcidentify"
+	"github.com/thegreatco/sbcidentify/boardtype"
 )
 
 type test struct {
 	requiresRoot      bool
-	requiredBoardType *BoardType
+	requiredBoardType *boardtype.SBC
 	requiresSbc       bool
 }
 
@@ -22,7 +23,7 @@ func (t *test) RequiresRoot() *test {
 	return t
 }
 
-func (t *test) RequiresBoardType(boardType BoardType) *test {
+func (t *test) RequiresBoardType(boardType boardtype.SBC) *test {
 	t.requiredBoardType = &boardType
 	return t
 }
@@ -34,16 +35,16 @@ func (t *test) RequiresSbc() *test {
 
 func (t *test) ShouldSkip(test *testing.T) {
 	if t.requiresSbc {
-		boardType, err := GetBoardType()
+		boardType, err := sbcidentify.GetBoardType()
 		if err != nil {
 			test.Error(err)
 		}
-		if boardType == BoardTypeUnknown {
+		if boardType == nil {
 			test.Skipf("Test requires physical SBC")
 		}
 	}
 
-	if t.requiredBoardType != nil && !IsBoardType(*t.requiredBoardType) {
+	if t.requiredBoardType != nil && !sbcidentify.IsBoardType(*t.requiredBoardType) {
 		test.Skipf("Test requires board type %v", t.requiredBoardType)
 	}
 	if t.requiresRoot && !IsRoot() {
