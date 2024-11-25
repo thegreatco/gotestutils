@@ -37,18 +37,18 @@ func (t *test) ShouldSkip(test *testing.T) {
 	if t.requiresSbc {
 		boardType, err := sbcidentify.GetBoardType()
 		if err != nil {
-			test.Error(err)
+			test.Log(err)
 		}
 		if boardType == nil {
-			test.Skipf("Test requires physical SBC")
+			test.Skip("Test requires physical SBC, not running on SBC")
 		}
 	}
 
 	if t.requiredBoardType != nil && !sbcidentify.IsBoardType(*t.requiredBoardType) {
-		test.Skipf("Test requires board type %v", t.requiredBoardType)
+		test.Skipf("Test requires board type %v", (*t.requiredBoardType).GetPrettyName())
 	}
 	if t.requiresRoot && !IsRoot() {
-		test.Skip("Test requires root")
+		test.Skip("Test requires root, not running as root")
 	}
 }
 
